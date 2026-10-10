@@ -1,0 +1,29 @@
+
+# Dependencias
+node_modules/
+
+# Variables privadas
+.env
+.env.local
+.env.*
+
+# Permitir archivos de ejemplo
+!.env.example
+
+# Resultados temporales
+test-results/
+playwright-report/
+reportes/test-results/
+reportes/html/
+playwright/.cache/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos temporales
+*.log
+*.tmp
+
+# Configuracion de VS Code
+.vscode/
