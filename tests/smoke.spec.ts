@@ -1,9 +1,10 @@
 
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 import { HomePage } from '../pages/HomePage';
 import { LoginPage } from '../pages/LoginPage';
 import { RegisterPage } from '../pages/RegisterPage';
+import { ProductPage } from '../pages/ProductPage';
 
 test.describe('Grupo 2 - Smoke Tests - LambdaTest', () => {
 
@@ -36,5 +37,37 @@ test.describe('Grupo 2 - Smoke Tests - LambdaTest', () => {
       await registerPage.verificarFormulario();
     }
   );
+
+  
+test(
+  'TC-SM04 - Buscador de productos disponible @smoke',
+  async ({ page }) => {
+    const productPage = new ProductPage(page);
+
+    await page.goto('/');
+
+    await expect(
+      productPage.searchInput
+    ).toBeVisible();
+  }
+);
+
+test(
+      'TC-SM05 - Pagina de productos disponible @smoke',
+        async ({ page }) => {
+        const productPage = new ProductPage(page);
+
+        await productPage.visitarCatalogo();
+
+        await expect(page).toHaveURL(
+        /route=product\/category/
+        );
+
+          await expect(
+            page.locator('body')
+       ).toBeVisible();
+      }
+    );
+
 
 });
