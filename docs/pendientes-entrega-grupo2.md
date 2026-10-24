@@ -52,4 +52,3 @@ Las pruebas locales aprobadas no sustituyen la validación funcional de la aplic
 
 El proyecto dispone de pruebas automatizadas, documentación de cobertura y evidencias de validaciones locales.
 
-Para completar la entrega será necesario revisar los requisitos académicos, consolidar el informe final y documentar de manera transparente las pruebas que no pudieron ejecutarse.
