@@ -52,22 +52,35 @@ test(
   }
 );
 
+
 test(
-      'TC-SM05 - Pagina de productos disponible @smoke',
-        async ({ page }) => {
-        const productPage = new ProductPage(page);
+  'TC-SM05 - Pagina de detalle de producto disponible @smoke',
+  async ({ page }) => {
+    const productPage = new ProductPage(page);
 
-        await productPage.visitarCatalogo();
+    // Abrir el catalogo
+    await productPage.visitarCatalogo();
 
-        await expect(page).toHaveURL(
-        /route=product\/category/
-        );
+    // Verificar que exista un enlace a un producto
+    await expect(
+      productPage.productLinks.first()
+    ).toBeVisible();
 
-          await expect(
-            page.locator('body')
-       ).toBeVisible();
-      }
+    // Abrir el primer producto
+    await productPage.abrirPrimerProducto();
+
+    // Verificar que se navego al detalle del producto
+    await expect(page).toHaveURL(
+      /route=product\/product/
     );
+
+    // Verificar que aparezca el titulo del producto
+    await expect(
+      page.locator('h1').first()
+    ).toBeVisible();
+  }
+);
+
 
 
 });
