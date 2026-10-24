@@ -80,4 +80,63 @@ test.describe('Grupo 2 - Regresion de productos y cuenta', () => {
     }
   );
 
+  
+test(
+  'TC-REV05 - Resena con campos vacios @regression',
+  async ({ page }) => {
+    const productPage = new ProductPage(page);
+
+    // Buscar y abrir un producto.
+    await productPage.buscarProducto('iPhone');
+    await productPage.abrirPrimerProducto();
+
+    // Acceder a resenas.
+    await productPage.abrirResenas();
+
+    // Comprobar formulario.
+    await productPage.verificarFormularioResena();
+
+    // Enviar sin llenar campos.
+    await productPage.enviarResena();
+
+    // La aplicacion debe mostrar una validacion.
+    await expect(
+      productPage.alertMessages.first()
+        ).toBeVisible();
+    }
+  );
+
+  
+test(
+  'TC-REV06 - Validar acceso a edicion de perfil @regression',
+  async ({ page }) => {
+    const accountPage = new AccountPage(page);
+
+    await accountPage.abrirEditarPerfil();
+
+    // Una persona sin sesion no debe poder
+    // acceder a la edicion del perfil.
+    await expect(page).toHaveURL(
+      /route=account\/login/
+    );
+  }
+);
+
+test(
+  'TC-REV07 - Validar acceso a cambio de contrasena @regression',
+  async ({ page }) => {
+    const accountPage = new AccountPage(page);
+
+    await accountPage.abrirCambiarPassword();
+
+    // Sin autenticacion no debe permitirse
+    // cambiar la contrasena.
+    await expect(page).toHaveURL(
+      /route=account\/login/
+    );
+  }
+);
+
+
+
 });
