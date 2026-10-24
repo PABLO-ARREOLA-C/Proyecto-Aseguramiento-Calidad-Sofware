@@ -3,8 +3,9 @@ import { test, expect } from '@playwright/test';
 
 import { HomePage } from '../pages/HomePage';
 import { LoginPage } from '../pages/LoginPage';
-import { RegisterPage } from '../pages/RegisterPage';
+import { AccountPage } from '../pages/AccountPage';
 import { ProductPage } from '../pages/ProductPage';
+import { usuarioLogin } from '../test-data/users';
 
 test.describe('Grupo 2 - Smoke Tests - LambdaTest', () => {
 
@@ -29,58 +30,81 @@ test.describe('Grupo 2 - Smoke Tests - LambdaTest', () => {
   );
 
   test(
-    'TC-SM03 - El formulario de registro carga @smoke',
+    'TC-SM03 - Inicio de sesion exitoso @smoke',
     async ({ page }) => {
-      const registerPage = new RegisterPage(page);
+      test.skip(
+        !usuarioLogin.email || !usuarioLogin.password,
+        'Se requieren credenciales de una cuenta de pruebas'
+      );
 
-      await registerPage.visitar();
-      await registerPage.verificarFormulario();
+      const loginPage = new LoginPage(page);
+
+      await loginPage.visitar();
+
+      await loginPage.iniciarSesion(
+        usuarioLogin.email,
+        usuarioLogin.password
+      );
+
+      await expect(page).toHaveURL(
+        /route=account\/account/
+      );
     }
   );
 
-  
-test(
-  'TC-SM04 - Buscador de productos disponible @smoke',
-  async ({ page }) => {
-    const productPage = new ProductPage(page);
+  test(
+    'TC-SM04 - Cierre de sesion exitoso @smoke',
+    async ({ page }) => {
+      test.skip(
+        !usuarioLogin.email || !usuarioLogin.password,
+        'Se requieren credenciales de una cuenta de pruebas'
+      );
 
-    await page.goto('/');
+      const loginPage = new LoginPage(page);
+      const accountPage = new AccountPage(page);
 
-    await expect(
-      productPage.searchInput
-    ).toBeVisible();
-  }
-);
+      // Iniciar sesion antes de cerrarla
+      await loginPage.visitar();
 
+      await loginPage.iniciarSesion(
+        usuarioLogin.email,
+        usuarioLogin.password
+      );
 
-test(
-  'TC-SM05 - Pagina de detalle de producto disponible @smoke',
-  async ({ page }) => {
-    const productPage = new ProductPage(page);
+      // Confirmar que el usuario inicio sesion
+      await expect(page).toHaveURL(
+        /route=account\/account/
+      );
 
-    // Abrir el catalogo
-    await productPage.visitarCatalogo();
+      // Cerrar sesion y comprobar la confirmacion
+      await accountPage.cerrarSesion();
 
-    // Verificar que exista un enlace a un producto
-    await expect(
-      productPage.productLinks.first()
-    ).toBeVisible();
+      // Verificar que la sesion ya no permita
+      // acceder directamente al panel de usuario
+      await accountPage.visitar();
 
-    // Abrir el primer producto
-    await productPage.abrirPrimerProducto();
+      await expect(page).toHaveURL(
+        /route=account\/login/
+      );
+    }
+  );
 
-    // Verificar que se navego al detalle del producto
-    await expect(page).toHaveURL(
-      /route=product\/product/
-    );
+  test(
+    'TC-SM05 - Pagina de detalle de producto disponible @smoke',
+    async ({ page }) => {
+      const productPage = new ProductPage(page);
 
-    // Verificar que aparezca el titulo del producto
-    await expect(
-      page.locator('h1').first()
-    ).toBeVisible();
-  }
-);
+      await productPage.visitarCatalogo();
+      await productPage.abrirPrimerProducto();
 
+      await expect(page).toHaveURL(
+        /route=product\/product/
+      );
 
+      await expect(
+        page.locator('h1').first()
+      ).toBeVisible();
+    }
+  );
 
 });

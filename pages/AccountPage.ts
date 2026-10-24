@@ -120,4 +120,19 @@ export class AccountPage {
       }).first()
     ).toBeVisible();
   }
+  
+  // Cerrar sesion del usuario
+  async cerrarSesion(): Promise<void> {
+    await this.page.goto(
+      '/index.php?route=account/logout'
+    );
+
+    // Verificar que se muestre la confirmacion
+    await expect(
+      this.page.getByRole('heading', {
+        name: /Account Logout/i,
+      })
+    ).toBeVisible();
+  }
+
 }

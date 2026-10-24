@@ -163,6 +163,34 @@ test.describe('Grupo 2 - Regresion de autenticacion', () => {
       await registerPage.verificarRegistroExitoso();
     }
   );
+  
+  test(
+    'TC-AUTH07 - Registro con correo duplicado @regression',
+    async ({ page }) => {
+      test.skip(
+        !usuarioLogin.email ||
+        !usuarioRegistro.password,
+        'Se requiere un correo registrado y una contrasena de prueba'
+      );
+
+      const registerPage = new RegisterPage(page);
+
+      await registerPage.registrarUsuario({
+        ...usuarioRegistro,
+        email: usuarioLogin.email,
+      });
+
+      // El sistema debe rechazar el correo existente
+      await expect(page).toHaveURL(
+        /route=account\/register/
+      );
+
+      // Comprobar mensaje de correo duplicado
+      await registerPage.verificarError(
+        /E-Mail Address is already registered/i
+      );
+    }
+  );
 
 
 });
