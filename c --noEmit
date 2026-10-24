@@ -1,0 +1,12 @@
+[33m9b5db5b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #1 from PABLO-ARREOLA-C/Cesar
+[33m3d21e47[m[33m ([m[1;31morigin/Cesar[m[33m)[m docs: consolidar resultados y pendientes de pruebas - Cesar
+[33meeccb43[m docs: agregar matriz de trazabilidad de pruebas - Cesar
+[33m7be893c[m test: agregar validaciones parametrizadas de resenas - Cesar
+[33m02d8096[m test: parametrizar validaciones de calificaciones - Cesar
+[33ma6ac9c4[m test: ampliar regresion de resenas y proteccion de cuenta - Cesar
+[33mbe59269[m docs: documentar diez casos manuales de pruebas - Cesar
+[33ma43b353[m test: validar rango de calificaciones en ProductPage - Cesar
+[33mf8f7b9d[m docs: documentar incidente de conectividad de LambdaTest - Cesar
+[33mb2a8b93[m test: agregar smoke tests de busqueda y catalogo - Cesar
+[33m19b5325[m feat: agregar Page Objects y pruebas de regresion de Cesar
+[33m26dbd62[m creacion del repositorio, configuracion inicial de Playwright, Page Objects y pruebas automatizadas
