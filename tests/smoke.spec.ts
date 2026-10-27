@@ -7,7 +7,12 @@ import { AccountPage } from '../pages/AccountPage';
 import { ProductPage } from '../pages/ProductPage';
 import { usuarioLogin } from '../test-data/users';
 
-test.describe('Grupo 2 - Smoke Tests - LambdaTest', () => {
+const tieneCredenciales = Boolean(
+  usuarioLogin.email.trim() &&
+  usuarioLogin.password.trim()
+);
+
+test.describe('Grupo 2 - Smoke Tests - OpenCart Abstracta', () => {
 
   test(
     'TC-SM01 - La pagina principal carga @smoke',
@@ -33,8 +38,8 @@ test.describe('Grupo 2 - Smoke Tests - LambdaTest', () => {
     'TC-SM03 - Inicio de sesion exitoso @smoke',
     async ({ page }) => {
       test.skip(
-        !usuarioLogin.email || !usuarioLogin.password,
-        'Se requieren credenciales de una cuenta de pruebas'
+        !tieneCredenciales,
+        'Se requieren QA_USER_EMAIL y QA_USER_PASSWORD en .env'
       );
 
       const loginPage = new LoginPage(page);
@@ -47,7 +52,7 @@ test.describe('Grupo 2 - Smoke Tests - LambdaTest', () => {
       );
 
       await expect(page).toHaveURL(
-        /route=account\/account/
+        /[?&]route=account\/account(?:&|$)/
       );
     }
   );
@@ -56,14 +61,14 @@ test.describe('Grupo 2 - Smoke Tests - LambdaTest', () => {
     'TC-SM04 - Cierre de sesion exitoso @smoke',
     async ({ page }) => {
       test.skip(
-        !usuarioLogin.email || !usuarioLogin.password,
-        'Se requieren credenciales de una cuenta de pruebas'
+        !tieneCredenciales,
+        'Se requieren QA_USER_EMAIL y QA_USER_PASSWORD en .env'
       );
 
       const loginPage = new LoginPage(page);
       const accountPage = new AccountPage(page);
 
-      // Iniciar sesion antes de cerrarla
+      // Iniciar sesion antes de cerrar la sesion.
       await loginPage.visitar();
 
       await loginPage.iniciarSesion(
@@ -71,20 +76,24 @@ test.describe('Grupo 2 - Smoke Tests - LambdaTest', () => {
         usuarioLogin.password
       );
 
-      // Confirmar que el usuario inicio sesion
+      // Verificar que el inicio de sesion fue exitoso.
       await expect(page).toHaveURL(
-        /route=account\/account/
+        /[?&]route=account\/account(?:&|$)/
       );
 
-      // Cerrar sesion y comprobar la confirmacion
+      // Cerrar sesion.
       await accountPage.cerrarSesion();
 
-      // Verificar que la sesion ya no permita
-      // acceder directamente al panel de usuario
+      // Verificar que se muestra la pagina de logout.
+      await expect(page).toHaveURL(
+        /[?&]route=account\/logout(?:&|$)/
+      );
+
+      // Comprobar que ya no existe una sesion activa.
       await accountPage.visitar();
 
       await expect(page).toHaveURL(
-        /route=account\/login/
+        /[?&]route=account\/login(?:&|$)/
       );
     }
   );
@@ -98,7 +107,7 @@ test.describe('Grupo 2 - Smoke Tests - LambdaTest', () => {
       await productPage.abrirPrimerProducto();
 
       await expect(page).toHaveURL(
-        /route=product\/product/
+        /[?&]route=product\/product(?:&|$)/
       );
 
       await expect(

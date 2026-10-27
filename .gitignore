@@ -8,8 +8,9 @@ node_modules/
 .env.*
 
 # Permitir archivos de ejemplo
+.env
+.env.*
 !.env.example
-
 # Resultados temporales
 test-results/
 playwright-report/

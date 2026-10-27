@@ -27,7 +27,7 @@ export default defineConfig({
   ],
 
   use: {
-    baseURL: 'https://ecommerce-playground.lambdatest.io',
+   baseURL: 'https://opencart.abstracta.us/',
 
     trace: 'retain-on-failure',
 
