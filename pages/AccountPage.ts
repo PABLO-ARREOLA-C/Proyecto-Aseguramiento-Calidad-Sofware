@@ -127,11 +127,25 @@ export class AccountPage {
       '/index.php?route=account/logout'
     );
 
-    // Verificar que se muestre la confirmacion
+    // Verificar que estamos en la pagina de logout
+    await expect(this.page).toHaveURL(
+      /[?&]route=account\/logout(?:&|$)/
+    );
+
+    // Verificar el encabezado real de OpenCart Abstracta
     await expect(
       this.page.getByRole('heading', {
-        name: /Account Logout/i,
+        name: 'Account',
+        exact: true,
       })
+    ).toBeVisible();
+
+    // Verificar el mensaje de cierre de sesion exitoso
+    await expect(
+      this.page.getByText(
+        'You have been logged off your account.',
+        { exact: false }
+      )
     ).toBeVisible();
   }
 
