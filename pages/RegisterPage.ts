@@ -82,8 +82,9 @@ export class RegisterPage {
 
     // Confirmacion de registro
     this.successHeading = page.getByRole('heading', {
-      name: /Your Account Has Been Created/i,
-    });
+  name: 'Account',
+  exact: true,
+});
   }
 
   /**
@@ -162,12 +163,32 @@ export class RegisterPage {
     await this.enviarFormulario();
   }
 
+  
+  
   /**
-   * Verificar registro exitoso
+   * Verificar registro exitoso en OpenCart Abstracta
    */
   async verificarRegistroExitoso(): Promise<void> {
-    await expect(this.successHeading).toBeVisible();
+
+    // Comprobar que estamos en la pagina de exito.
+    await expect(this.page).toHaveURL(
+      /[?&]route=account\/success(?:&|$)/
+    );
+
+    // Verificar el encabezado real.
+    await expect(
+      this.successHeading
+    ).toBeVisible();
+
+    // Comprobar el mensaje de confirmacion.
+    await expect(
+      this.page.getByText(
+        'Congratulations! Your new account has been successfully created!',
+        { exact: false }
+      )
+    ).toBeVisible();
   }
+
 
   /**
    * Verificar que existen mensajes de error

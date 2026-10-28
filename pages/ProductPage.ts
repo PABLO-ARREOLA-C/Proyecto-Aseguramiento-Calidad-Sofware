@@ -48,9 +48,10 @@ export class ProductPage {
     this.reviewButton = page.locator('#button-review');
 
     // Seccion de resenas
-    this.reviewTab = page.locator(
-      'a[href="#product-product-tab-review"]'
-    );
+    // Pestana de resenas de OpenCart
+this.reviewTab = page.locator(
+  'a[href="#tab-review"]'
+);
 
     // Mensajes del sistema
     this.alertMessages = page.locator(
@@ -85,10 +86,16 @@ export class ProductPage {
     await this.productLinks.first().click();
   }
 
-  // Abrir pestana de resenas
-  async abrirResenas(): Promise<void> {
-    await this.reviewTab.click();
-  }
+// Abrir pestana de resenas
+async abrirResenas(): Promise<void> {
+  await expect(this.reviewTab).toBeVisible();
+
+  await this.reviewTab.click();
+
+  // Confirmar que el formulario esta disponible
+  await expect(this.reviewNameInput).toBeVisible();
+  await expect(this.reviewTextInput).toBeVisible();
+}
 
   // Verificar formulario de resenas
   async verificarFormularioResena(): Promise<void> {

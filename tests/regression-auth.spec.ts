@@ -140,57 +140,63 @@ test.describe('Grupo 2 - Regresion de autenticacion', () => {
     }
   );
   
+ 
   test(
     'TC-AUTH06 - Registro exitoso @regression',
     async ({ page }) => {
       test.skip(
-        !usuarioRegistro.email ||
-        !usuarioRegistro.password,
-        'Se requieren credenciales de registro configuradas'
+        !usuarioRegistro.email.trim() ||
+        !usuarioRegistro.password.trim(),
+        'Configurar QA_REGISTER_EMAIL y QA_REGISTER_PASSWORD en .env'
       );
 
       const registerPage = new RegisterPage(page);
 
+      // Generar un correo unico para cada ejecucion.
+      const emailUnico = usuarioRegistro.email.replace(
+        '@',
+        `+qa${Date.now()}@`
+      );
+
       await registerPage.registrarUsuario({
         ...usuarioRegistro,
-        email: usuarioRegistro.email.replace(
-          '@',
-          `+qa${Date.now()}@`
-        ),
+        email: emailUnico,
       });
 
-      // Comprobar que se creo la cuenta
+      // Comprobar que la cuenta fue creada.
       await registerPage.verificarRegistroExitoso();
     }
   );
-  
+
   test(
     'TC-AUTH07 - Registro con correo duplicado @regression',
     async ({ page }) => {
       test.skip(
-        !usuarioLogin.email ||
-        !usuarioRegistro.password,
-        'Se requiere un correo registrado y una contrasena de prueba'
+        !usuarioLogin.email.trim() ||
+        !usuarioRegistro.password.trim(),
+        'Se requiere una cuenta existente y QA_REGISTER_PASSWORD'
       );
 
       const registerPage = new RegisterPage(page);
 
+      // Intentar registrar una cuenta con un correo existente.
       await registerPage.registrarUsuario({
         ...usuarioRegistro,
         email: usuarioLogin.email,
       });
 
-      // El sistema debe rechazar el correo existente
+      // El sistema debe permanecer en el formulario.
       await expect(page).toHaveURL(
-        /route=account\/register/
+        /[?&]route=account\/register(?:&|$)/
       );
 
-      // Comprobar mensaje de correo duplicado
+      // Comprobar que se rechaza el correo duplicado.
       await registerPage.verificarError(
         /E-Mail Address is already registered/i
       );
     }
   );
+
 
 
 });
